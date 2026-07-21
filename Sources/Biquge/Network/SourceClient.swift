@@ -84,8 +84,9 @@ struct SourceClient {
         case "gbk", "gb2312", "gb18030":
             // CFStringEncoding → NSStringEncoding
             let cf = CFStringConvertIANACharSetNameToEncoding(charset.lowercased() as CFString)
+            // CFStringConvertIANACharSetNameToEncoding 在 unknown 时返回 kCFStringEncodingInvalidId
+            guard cf != kCFStringEncodingInvalidId else { return nil }
             let ns = CFStringConvertEncodingToNSStringEncoding(cf)
-            guard ns != kCFStringEncodingInvalidId else { return nil }
             encoding = String.Encoding(rawValue: ns)
         default:
             return nil

@@ -115,6 +115,7 @@ final class SourceStore: ObservableObject {
 
     private func sha(_ s: String) -> String {
         // 简易 hash（不要求密码学强度，仅做文件名）
-        return String(format: "%016llx", s.hashValue & 0xFFFFFFFFFFFFFFFF)
+        let h = UInt(bitPattern: s.hashValue)
+        return String(format: "%016llx", h & 0xFFFFFFFFFFFFFFFF)
     }
 }
