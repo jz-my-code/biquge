@@ -33,9 +33,6 @@ struct SourceManagerView: View {
                     EditButton()
                 }
             }
-            .alert("导入书源", isPresented: $showImporter) {
-                TextField("粘贴书源 JSON", text: .constant(""), axis: .vertical)
-            }
             .sheet(isPresented: $showImporter) {
                 ImportSourceView { json in
                     do {

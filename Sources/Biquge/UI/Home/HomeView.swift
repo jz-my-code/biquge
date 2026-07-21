@@ -20,12 +20,10 @@ struct HomeView: View {
                 } else {
                     LazyVGrid(columns: gridCols, spacing: 16) {
                         ForEach(items) { item in
-                            BookCardView(book: loadedBooks[item.bookId])
-                                .onTapGesture { /* 跳详情由 NavigationLink 处理 */ }
-                                .background(
-                                    NavigationLink(value: item.bookId) { EmptyView() }
-                                        .opacity(0)
-                                )
+                            NavigationLink(value: item.bookId) {
+                                BookCardView(book: loadedBooks[item.bookId])
+                            }
+                            .buttonStyle(.plain)
                         }
                     }
                     .padding()

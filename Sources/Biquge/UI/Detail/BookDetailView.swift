@@ -145,7 +145,7 @@ struct BookDetailView: View {
             }
         }
         .navigationDestination(for: Chapter.self) { ch in
-            ReaderView(bookId: bookUrl, chapter: ch)
+            ReaderView(bookId: bookUrl, sourceId: sourceId, chapter: ch)
         }
     }
 
@@ -170,16 +170,5 @@ struct BookDetailView: View {
     }
 }
 
-// MARK: - Chapter + Hashable 协议满足 Navigation
-
-extension Chapter: Hashable {
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(id)
-        hasher.combine(bookId)
-        hasher.combine(index)
-    }
-
-    static func == (lhs: Chapter, rhs: Chapter) -> Bool {
-        lhs.id == rhs.id && lhs.bookId == rhs.bookId && lhs.index == rhs.index
-    }
-}
+// Chapter 已在 Book.swift 中声明 Hashable，此处不需要重复遵守
+// extension 已移除

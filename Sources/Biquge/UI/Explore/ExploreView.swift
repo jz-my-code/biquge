@@ -10,19 +10,20 @@ struct ExploreView: View {
         NavigationStack {
             List {
                 ForEach(sources.enabledSources()) { source in
-                    if !source.enabledExplore { return }
-                    let entries = entries(for: source)
-                    if entries.isEmpty { return }
-
-                    Section(source.bookSourceName) {
-                        ForEach(entries) { entry in
-                            NavigationLink(value: ExploreTarget(sourceId: source.id, entry: entry)) {
-                                VStack(alignment: .leading, spacing: 2) {
-                                    Text(entry.name)
-                                        .font(.body)
-                                    Text(source.bookSourceName)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
+                    if source.enabledExplore {
+                        let entries = entries(for: source)
+                        if !entries.isEmpty {
+                            Section(source.bookSourceName) {
+                                ForEach(entries) { entry in
+                                    NavigationLink(value: ExploreTarget(sourceId: source.id, entry: entry)) {
+                                        VStack(alignment: .leading, spacing: 2) {
+                                            Text(entry.name)
+                                                .font(.body)
+                                            Text(source.bookSourceName)
+                                                .font(.caption)
+                                                .foregroundStyle(.secondary)
+                                        }
+                                    }
                                 }
                             }
                         }

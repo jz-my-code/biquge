@@ -53,17 +53,8 @@ final class SourceStore: ObservableObject {
 
     func setEnabled(sourceId: String, enabled: Bool) {
         guard let i = sources.firstIndex(where: { $0.id == sourceId }) else { return }
-        var s = sources[i]
-        // BookSource 是 let，替换整对象
-        let data = try? JSONEncoder().encode(s)
-        guard var dict = (data.flatMap { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }) else { return }
-        dict["enabled"] = enabled
-        if let newData = try? JSONSerialization.data(withJSONObject: dict),
-           let newSource = try? JSONDecoder().decode(BookSource.self, from: newData) {
-            sources[i] = newSource
-            saveAll()
-        }
-        _ = s // silence
+        sources[i].enabled = enabled
+        saveAll()
     }
 
     func enabledSources() -> [BookSource] { sources.filter { $0.enabled } }

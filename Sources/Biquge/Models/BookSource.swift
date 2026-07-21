@@ -13,7 +13,7 @@ struct BookSource: Identifiable, Codable, Hashable {
     let bookSourceType: Int
     let bookUrlPattern: String?
     let customOrder: Int
-    let enabled: Bool
+    var enabled: Bool
     let enabledCookieJar: Bool
     let enabledExplore: Bool
     let exploreUrl: String?

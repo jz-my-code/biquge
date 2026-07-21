@@ -10,6 +10,7 @@ struct ReaderView: View {
     @EnvironmentObject private var shelf: ShelfStore
 
     let bookId: String
+    let sourceId: String   // 来源书源 ID
     @State private var currentChapter: Chapter
 
     @State private var content: String = ""
@@ -21,8 +22,9 @@ struct ReaderView: View {
     @AppStorage("reader.darkMode") private var darkMode = false
     @AppStorage("reader.lineSpacing") private var lineSpacing: Double = 6
 
-    init(bookId: String, chapter: Chapter) {
+    init(bookId: String, sourceId: String, chapter: Chapter) {
         self.bookId = bookId
+        self.sourceId = sourceId
         _currentChapter = .init(initialValue: chapter)
     }
 
@@ -171,8 +173,7 @@ struct ReaderView: View {
         }
 
         // 从书源抓取
-        guard let srcId = shelf.items.first(where: { $0.bookId == bookId })?.sourceId,
-              let source = sources.source(for: srcId) else { return }
+        guard let source = sources.source(for: sourceId) else { return }
         let repo = SourceRepository(source: source)
         do {
             let text = try await repo.chapterContent(chapterUrl: chapter.id)
@@ -195,12 +196,10 @@ struct ReaderView: View {
 
         // 拉取完整目录（如果还没拉的话）
         if chapters.isEmpty {
-            if let source = sources.source(for: srcId) {
-                let repo = SourceRepository(source: source)
-                if let toc = try? await repo.tableOfContents(bookUrl: bookId) {
-                    chapters = toc
-                    currentIndex = toc.firstIndex(where: { $0.id == chapter.id }) ?? 0
-                }
+            let tocRepo = SourceRepository(source: source)
+            if let toc = try? await tocRepo.tableOfContents(bookUrl: bookId) {
+                chapters = toc
+                currentIndex = toc.firstIndex(where: { $0.id == chapter.id }) ?? 0
             }
         }
     }

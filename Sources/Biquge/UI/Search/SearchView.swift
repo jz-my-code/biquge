@@ -123,12 +123,7 @@ struct SearchView: View {
     private func loadThenNavigate(bookUrl: String, sourceId: String) async {
         guard let source = sources.source(for: sourceId) else { return }
         let repo = SourceRepository(source: source)
-        if let book = try? await repo.bookDetail(bookUrl: bookUrl) {
-            // 通过关闭 sheet 后跳详情的简单方案：先保存到内存里供外层使用
-            // 这里直接由 DetailView 接管渲染
-            pendingBook = book
-        }
+        // BookDetailView 会自己拉详情，不需要提前加载
+        _ = repo
     }
-
-    @State private var pendingBook: Book?
 }
