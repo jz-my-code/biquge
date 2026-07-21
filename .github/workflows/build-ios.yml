@@ -33,6 +33,7 @@ jobs:
 
       - name: Build (unsigned)
         run: |
+          set -o pipefail
           xcodebuild \
             -project Biquge.xcodeproj \
             -scheme Biquge \
@@ -44,7 +45,15 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGNING_ALLOWED=NO \
             DEVELOPMENT_TEAM="" \
-            build 2>&1 | xcpretty --color && exit ${PIPESTATUS[0]}
+            build 2>&1 | tee build.log | xcpretty --color
+          exit_code=${PIPESTATUS[0]}
+          {
+            echo '## xcodebuild output (last 300 lines)'
+            echo '```'
+            tail -n 300 build.log
+            echo '```'
+          } >> $GITHUB_STEP_SUMMARY
+          exit $exit_code
 
       - name: Locate .app
         id: findapp
